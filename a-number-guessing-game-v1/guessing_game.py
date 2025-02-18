@@ -1,9 +1,8 @@
 import random 
 import statistics
-import sys
 
-# Create the start_game function.
-# Write your code inside this function.
+# List of total guesses per game
+game_scores = []
 
 def game_instructions():
     print("""The game will randomly select a number between 1 to 10. 
@@ -14,26 +13,39 @@ After each guess, you will receive feedback:
     - 'Correct!' if you guessed the right number!
 You can quit anytime by typing 'QUIT'.
 """)
-# starts the game
+# Starts the game
 def play_game():
     random_number = random.randint(1, 10)
-    attempt = []
+    # Individual game score
+    guess_count = 0
 
     while True:
         try:
-            user_guess = int(input("Guess a number between 1 and 10:   "))
+            user_guess = int(input("Guess a number between 1 and 10:  "))
+            # Makes the range exclusive
+            if user_guess < 1 or user_guess > 10:
+                print("Please enter a number between 1 and 10.")
+                continue
+            # Increase guess attempts
+            guess_count += 1
+
             if user_guess > random_number:
                 print("Too high!")
-
             elif user_guess < random_number:
                 print("Too low!")
             else: 
-                print("Correct!")
+                print(f"Correct!")
+                if guess_count == 1:
+                    print(f"Well done! You guessed the number in {guess_count} attempt.")
+                else:
+                    print(f"Well done! You guessed the number in {guess_count} attempts.")
+                # Number of attempts is stored in game_scores list
+                game_scores.append(guess_count)
                 break
         except ValueError:
-            print("Please enter a valid number.") 
+            print("Please enter a valid number.")
 
-# kicks off the app with a menu
+# Kicks off the app with a menu
 def start_game():
     print("""\N{PARTY POPPER} Welcome to the Number Guessing Game! \N{PARTY POPPER}
 Type 'INSTRUCTIONS' to learn how to play.
@@ -48,6 +60,9 @@ Type 'QUIT' to exit the game.
             game_instructions()
         elif user_input.upper() == 'START':
             play_game()
+            # After winning a game, user sees a displayed list of their scores
+            print("Game Scores:", game_scores)
+            #break
         elif user_input.upper() == "QUIT":
             print("Thanks for playing! \N{WAVING HAND SIGN}")
             break
